@@ -1,6 +1,6 @@
 # Identity Reconciliation Backend
 Submitted by: Aditya Jaiswal  
-Task: Bitespeed Identity Reconciliation Backend Assignment
+Task: Identity Reconciliation Backend Assignment
 
 This is a FastAPI based backend that solves the identity reconciliation problem.  
 The objective is to merge multiple records of a user based on email and phone number and return a single primary contact with all related secondary contacts.
