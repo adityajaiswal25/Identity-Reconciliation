@@ -4,7 +4,9 @@ from database import get_db
 from models import Contact
 
 app = FastAPI()
-
+@app.get("/")
+def home():
+    return {"status": "ok", "msg": "API running fine"}
 @app.post("/identify")
 def identify(payload: dict, db: Session = Depends(get_db)):
 
