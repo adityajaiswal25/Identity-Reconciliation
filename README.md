@@ -24,6 +24,23 @@ The system maintains:
 - Proper merging when email and phone overlap across different users  
 
 ---
+## Real-time Benefits and Use Cases
+
+### Benefits
+- **Unified Customer Profile**: Consolidate fragmented customer data across multiple touchpoints into a single, authoritative record, enabling a 360-degree view of customer interactions and behavior.
+- **Enhanced Data Quality**: Eliminate duplicate records and data inconsistencies, improving data integrity and reducing operational costs associated with managing redundant information.
+- **Improved Customer Experience**: Enable personalized marketing, customer service, and communications by maintaining accurate customer identities across all channels.
+- **Real-time Synchronization**: Instantly identify and merge duplicate contacts as new information arrives, ensuring database consistency without batch processing delays.
+- **Scalability**: Handle high-volume identity matching efficiently with minimal latency, supporting businesses of all sizes.
+
+### Use Cases
+- **E-commerce Platforms**: Merge customer accounts when users register with different email addresses or phone numbers, preventing duplicate orders and ensuring consistent order history.
+- **CRM Systems**: Consolidate customer records from multiple sales channels, ensuring unified communication and preventing duplicate outreach.
+- **Financial Institutions**: Identify and merge duplicate customer accounts for KYC (Know Your Customer) compliance and fraud prevention.
+- **Marketing Automation**: Maintain accurate contact lists by identifying and merging duplicate leads from various marketing campaigns and sources.
+- **Multi-channel Retail**: Synchronize customer identities across online, mobile, and physical store interactions for seamless omnichannel experiences.
+- **Healthcare Systems**: Link patient records across multiple healthcare providers using email and phone identifiers for better care coordination.
+- **SaaS Platforms**: Prevent duplicate user accounts and ensure data consistency when users have multiple sign-up methods (email, phone, social login).
 
 ## API Endpoint
 
