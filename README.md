@@ -1,105 +1,138 @@
-# Identity-Reconciliation
+# Identity Reconciliation Backend
+Submitted by: Aditya Jaiswal  
+Task: Bitespeed Identity Reconciliation Backend Assignment
 
-## Project Overview
-The Identity-Reconciliation project is designed to facilitate the process of reconciling user identities across multiple systems. This tool streamlines the identification of duplicates and inconsistencies, ensuring a unified user experience.
+This is a FastAPI based backend that solves the identity reconciliation problem.  
+The objective is to merge multiple records of a user based on email and phone number and return a single primary contact with all related secondary contacts.
 
-## Features
-- **User Identity Matching**: Identify and match duplicate user identities.
-- **Data Validation**: Validate user data across different sources.
-- **Audit Trail**: Maintain an audit trail of identity reconciliation activities.
-- **Configurable Rules**: Customize matching criteria as per organizational policies.
-- **API Access**: Programmatic access to reconciliation features through a RESTful API.
+## Live API URL  
+https://cooperative-warmth-production-d455.up.railway.app/
 
-## Installation Instructions
+## Repository  
+https://github.com/adityajaiswal25/Identity-Reconciliation
 
-1. **Clone the Repository**
+---
+
+## Problem Summary
+The system determines if a new incoming request belongs to an existing user or a new one.  
+If the email or phone number already exists in the database, the system merges them under one primary user.  
+If both are new, a new primary record is created.
+
+The system maintains:
+- One primary contact for a user group  
+- All other connected contacts as secondary  
+- Proper merging when email and phone overlap across different users  
+
+---
+
+## API Endpoint
+
+### POST /identify
+Accepts email and phone from the request body.  
+Detects if the user already exists and returns merged identity details.
+
+#### Example Request
+
+```
+POST /identify
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "phone": "99999"
+}
+```
+
+#### Example Response
+
+```json
+{
+  "contact": {
+    "primaryContactId": 1,
+    "emails": ["test@gmail.com"],
+    "phoneNumbers": ["99999"],
+    "secondaryContactIds": []
+  }
+}
+```
+
+---
+
+## Reconciliation Logic (Simplified Overview)
+1. Search for any contact matching the email or phone.
+2. If none found, create a new primary contact.
+3. If matches found, pick the smallest id as the primary.
+4. Convert other conflicting primary contacts to secondary.
+5. If new information arrives (new email or phone), create a secondary entry.
+6. Output the merged identity:  
+   - Primary ID  
+   - All emails  
+   - All phone numbers  
+   - All secondary contact IDs  
+
+---
+
+## Database Schema
+
+### contacts table
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | Primary Key | Unique identifier for each contact |
+| `email` | String | Email address |
+| `phone` | String | Phone number |
+| `linkedId` | Foreign Key | Reference to contacts.id for linking |
+| `linkPrecedence` | Enum | Either 'primary' or 'secondary' |
+| `createdAt` | Timestamp | Creation timestamp |
+| `updatedAt` | Timestamp | Last update timestamp |
+| `deletedAt` | Timestamp | Soft delete timestamp |
+
+---
+
+## How To Run Locally
+
+1. **Clone the repository**
    ```bash
    git clone https://github.com/adityajaiswal25/Identity-Reconciliation.git
    cd Identity-Reconciliation
    ```
 
-2. **Install Dependencies**
-   Make sure you have [Node.js](https://nodejs.org/) installed. Then run:
+2. **Install dependencies**
    ```bash
-   npm install
+   pip install -r requirements.txt
    ```
 
-3. **Configure Environment Variables**
-   Create a `.env` file and set the required environment variables:
-   ```plaintext
-   DATABASE_URL=your_database_url
-   PORT=3000
-   ```
-
-4. **Run the Application**
+3. **Set environment variable**
    ```bash
-   npm start
+   export DATABASE_URL="your_postgres_url"
    ```
 
-## API Documentation
+4. **Start the server**
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-### Base URL
-```
-http://localhost:3000/api/v1
-```
+5. **Open Swagger Docs**
+   Navigate to: http://127.0.0.1:8000/docs
 
-### Endpoints
+---
 
-#### 1. Match Identities
-- **Endpoint**: `/identities/match`
-- **Method**: `POST`
-- **Description**: Matches user identities based on provided criteria.
-- **Payload**:
-  ```json
-  {
-    "identities": [
-      { "name": "John Doe", "email": "john.doe@example.com" },
-      { "name": "Jane Smith", "email": "jane.smith@example.com" }
-    ]
-  }
-  ```
+## Deployment
+The project is deployed on Railway.  
+- `DATABASE_URL` is set using Railway PostgreSQL connection string  
+- Database table was created manually using Railway SQL editor  
 
-#### 2. Validate Identity
-- **Endpoint**: `/identities/validate`
-- **Method**: `POST`
-- **Description**: Validates the provided user identity.
-- **Payload**:
-  ```json
-  {
-    "name": "John Doe",
-    "email": "john.doe@example.com"
-  }
-  ```
+---
 
-## Database Schema
+## Technology Stack
+- **Framework**: FastAPI (Python)
+- **Database**: PostgreSQL
+- **Hosting**: Railway
+- **API Documentation**: Swagger/OpenAPI
 
-### User Table
-| Column Name    | Data Type | Description                        |
-|----------------|-----------|------------------------------------|
-| `id`           | Integer   | Unique identifier for the user     |
-| `name`         | String    | Full name of the user              |
-| `email`        | String    | Email address                      |
-| `created_at`   | Timestamp | Date and time when the user was created |
-| `updated_at`   | Timestamp | Date and time when the user was last updated |
+---
 
-### Audit Table
-| Column Name    | Data Type | Description                        |
-|----------------|-----------|------------------------------------|
-| `id`           | Integer   | Unique identifier for the audit entry |
-| `user_id`      | Integer   | ID of the user associated with the action |
-| `action`       | String    | Description of the reconciliation action |
-| `timestamp`    | Timestamp | Date and time of the action         |
-
-## Usage Examples
-
-### Matching Identities
-To match identities, send a `POST` request to the `/identities/match` endpoint with the necessary payload as shown in the API documentation.
-
-### Validating Identities
-To validate a user identity, send a `POST` request to the `/identities/validate` endpoint with the appropriate user details.
-
-## Contribution
-Contributions are welcome! Please create a pull request with your proposed changes.
-
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## Notes
+- The project is built in simple FastAPI  
+- Code follows a clean and understandable flow
+- Focus is on correctness and clarity rather than complexity
+- Fast identity reconciliation with efficient merging logic
